@@ -1,0 +1,1 @@
+python3 ./CORE/Phase1main.py --gene SEARCHED_PHASE2_GENE --exp EXP_1 --iter 3 --train_data ./data/train --valid_data ./data/valid

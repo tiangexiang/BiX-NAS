@@ -1,0 +1,1 @@
+python3 ./CORE/Phase1main.py --Phase1 --iter 3 --exp EXP_1 --lr 0.001 --train_data ./data/train --valid_data ./data/valid

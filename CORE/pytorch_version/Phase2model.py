@@ -291,6 +291,7 @@ class Phase2(Module):
                 x_in = F.interpolate(x_in, size=enc[-1].size()[-2:], mode='bilinear', align_corners=True)
 
         x_in = self.post_transform_conv_block(x_in)
+        x_in = self.post2(x_in)
         return x_in
 
     def forward(self, x, iterations=0, return_value=None, profile=True):

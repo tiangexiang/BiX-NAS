@@ -84,7 +84,7 @@ def train(args):
               'loss:', tot_loss/len(test_loader),
               'iou:', tot_iou/len(test_loader),
               'dice:', tot_dice/len(test_loader))
-        print('ha')
+
         # validation
         model.eval()
         with torch.no_grad():

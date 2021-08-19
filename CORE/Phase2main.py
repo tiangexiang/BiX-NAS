@@ -18,6 +18,7 @@ def argparsing():
     parser.add_argument('--backend', default='pytorch', choices=['pytorch'], type=str, help='support pytorch only')
     parser.add_argument('--random_num', default=15, type=int, help='num random')
     parser.add_argument('--save_gene', default=None, type=str, help='path to save genes')
+    parser.add_argument('--valid_dataset', default='monuseg', choices=['monuseg', 'tnbc'], type=str, help='which dataset to validate?')
     args = parser.parse_args()
 
     return args

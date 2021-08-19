@@ -48,8 +48,8 @@ class Block(Module):
             # weight matrix
             maxidx = torch.argmax(self.alpha, dim=0, keepdim=False)
             un, idx, counts = torch.unique(maxidx, return_inverse=True, return_counts=True, dim=0)
-            # weights = torch.ones(3,).cuda() #cuda
-            weights = torch.ones(3,) #cpu
+            weights = torch.ones(3,).cuda() #cuda
+            # weights = torch.ones(3,) #cpu
 
             for i in range(idx.size(0)):
                 weights[i] /= counts[idx[i]]

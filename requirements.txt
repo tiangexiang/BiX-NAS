@@ -2,7 +2,7 @@ Pillow==7.0.0
 matplotlib== .3.1
 tqdm==4.54.1
 imgaug==0.4.0
-torch==1.5.0
-torchvision==0.6.0
+torch==1.7.0
+torchvision==0.8.0
 ptflops==0.6.6
 scikit-learn==0.23.2

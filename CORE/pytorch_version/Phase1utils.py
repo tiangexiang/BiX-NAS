@@ -59,8 +59,8 @@ def train(args):
         # training
         model.train()
         for step, ret in enumerate(tqdm(train_loader, desc='[TRAIN] Epoch '+str(epoch+1)+'/'+str(args.epochs), disable=True)):
-            if step >= 1:
-                break
+            # if step >= 1:
+            #     break
 
             x = ret['x'].to(device)
             y = ret['y'].to(device)

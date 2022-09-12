@@ -118,37 +118,54 @@ class Phase2(Module):
                         dec_skip_or_not[layer] = False
                         continue
 
+        enc_convs = []
+        dec_convs = []
         for iteration in range(self.iterations):
             # initialize encoders
             for layer in range(self.num_layers):
-                in_channel = self.filters_list[layer] 
+                in_channel = self.filters_list[layer]
                 out_channel = self.filters_list[layer + 1]
                 if iteration == 0:
                     if not enc_skip_or_not[layer]:
-                        conv1 = Conv2d(in_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False)
-                        conv2 = Conv2d(out_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False)
+                        conv1 = Conv2d(in_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1),
+                                       bias=False)
+                        conv2 = Conv2d(out_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1),
+                                       bias=False)
                     else:
                         conv1 = None
                         conv2 = None
                         print('enc', layer, 'abandonned, conv is none!')
+                    enc_convs.append((conv1, conv2))
+                conv1 = enc_convs[layer][0]
+                conv2 = enc_convs[layer][1]
                 block = Block(in_channel, out_channel, (conv1, conv2), self.batch_norm_momentum, gene[count][layer])
                 self.add_module("iteration{0}_layer{1}_encoder_blocks".format(iteration, layer), block)
+                # print("iteration{0}_layer{1}_encoder_blocks".format(iteration, layer),
+                #       id("iteration{0}_layer{1}_encoder_blocks".format(iteration, layer)), id(conv1), id(conv2))
                 self.encoders.append(block)
             count += 1
+
             #  initialize decoders
             for layer in range(self.num_layers):
                 in_channel = self.filters_list[self.num_layers - layer]
                 out_channel = self.filters_list[self.num_layers - 1 - layer]
                 if iteration == 0:
                     if not dec_skip_or_not[layer]:
-                        conv1 = Conv2d(in_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False)
-                        conv2 = Conv2d(out_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False)
+                        conv1 = Conv2d(in_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1),
+                                       bias=False)
+                        conv2 = Conv2d(out_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1),
+                                       bias=False)
                     else:
                         conv1 = None
                         conv2 = None
                         print('dec', layer, 'abandoned, conv is none!')
+                    dec_convs.append((conv1, conv2))
+                conv1 = dec_convs[layer][0]
+                conv2 = dec_convs[layer][1]
                 block = Block(in_channel, out_channel, (conv1, conv2), self.batch_norm_momentum, gene[count][layer])
                 self.add_module("iteration{0}_layer{1}_decoder_blocks".format(iteration, layer), block)
+                # print("iteration{0}_layer{1}_decoder_blocks".format(iteration, layer),
+                #       id("iteration{0}_layer{1}_decoder_blocks".format(iteration, layer)), id(conv1), id(conv2))
                 self.decoders.append(block)
             count += 1
 

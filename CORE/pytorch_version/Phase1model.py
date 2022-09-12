@@ -103,8 +103,9 @@ class Phase1(Module):
         self.reuse_convs = []  
         self.encoders = nn.ModuleList()  
         self.reuse_deconvs = [] 
-        self.decoders = nn.ModuleList()  
-
+        self.decoders = nn.ModuleList()
+        enc_convs = []
+        dec_convs = []
         for iteration in range(self.iterations):
             for layer in range(self.num_layers):
                 # encoder blocks
@@ -113,8 +114,13 @@ class Phase1(Module):
                 if iteration == 0:
                     conv1 = Conv2d(in_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False)
                     conv2 = Conv2d(out_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False)
+                    enc_convs.append((conv1, conv2))
+                conv1 = enc_convs[layer][0]
+                conv2 = enc_convs[layer][1]
                 block = Block(in_channel, out_channel, (conv1, conv2), self.batch_norm_momentum)
                 self.add_module("iteration{0}_layer{1}_encoder_blocks".format(iteration, layer), block)
+                # print("iteration{0}_layer{1}_encoder_blocks".format(iteration, layer),
+                #       id("iteration{0}_layer{1}_encoder_blocks".format(iteration, layer)), id(conv1), id(conv2))
                 self.encoders.append(block)
 
                 # decoder blocks
@@ -123,8 +129,13 @@ class Phase1(Module):
                 if iteration == 0:
                     conv1 = Conv2d(in_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False)
                     conv2 = Conv2d(out_channel, out_channel, kernel_size=(3, 3), padding=(1, 1), stride=(1, 1), bias=False)
+                    dec_convs.append((conv1, conv2))
+                conv1 = dec_convs[layer][0]
+                conv2 = dec_convs[layer][1]
                 block = Block(in_channel, out_channel, (conv1, conv2), self.batch_norm_momentum, last_decoder=iteration==self.iterations-1)
                 self.add_module("iteration{0}_layer{1}_decoder_blocks".format(iteration, layer), block)
+                # print("iteration{0}_layer{1}_decoder_blocks".format(iteration, layer),
+                #       id("iteration{0}_layer{1}_decoder_blocks".format(iteration, layer)), id(conv1), id(conv2))
                 self.decoders.append(block)
 
         # bridge block
